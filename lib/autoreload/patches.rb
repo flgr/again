@@ -1,0 +1,1 @@
+require 'autoreload/patches/singleton'
