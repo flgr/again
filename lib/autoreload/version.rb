@@ -1,3 +1,3 @@
-class Autoreload
-  VERSION = "1.1.0"
+class AutoReload
+  VERSION = "1.1.4"
 end

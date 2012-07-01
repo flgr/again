@@ -4,7 +4,7 @@ require 'autoreload/patches'
 
 require 'set'
 require 'pathname'
-require 'tempfile'
+require 'tmpdir'
 require 'singleton'
 require 'fileutils'
 
@@ -79,7 +79,10 @@ class AutoReload
   remove_const(:PSEUDO_LIBS) if defined?(PSEUDO_LIBS)
   
   # Probably incomplete...
-  JRUBY_PSEUDO_LIBS = %w(enumerable.jar enumerator.jar tempfile.rb etc.jar rbconfig.rb jruby/util.rb)
+  JRUBY_PSEUDO_LIBS = %w(enumerable.jar enumerator.jar thread.rb tempfile.rb 
+    java.rb jruby.rb socket.jar strscan.jar iconv.jar stringio.jar etc.jar 
+    fcntl.rb timeout.rb digest/md5.jar jsignal_internal.rb rbconfig.rb 
+    jruby/util.rb digest/sha1.jar digest.jar jruby/path_helper.rb)
 
   PSEUDO_LIBS = %w(enumerable.so enumerator.so)
 
@@ -87,17 +90,18 @@ class AutoReload
   
   def pseudo_lib?(lib) PSEUDO_LIBS.include?(lib) end
   
+  RELOAD_MARKER = "--reload-temp--" unless defined?(RELOAD_MARKER)
+
   def find_base_paths()
     base_paths = *$LOAD_PATH.uniq
     base_paths << File.dirname(@full_prog_name)
-    
-    base_paths.reject! { |path| not File.exist?(path) }
+
+    base_paths.map! { |path| File.expand_path(path) }
+    base_paths.reject! { |path| not File.exist?(path) or path.include?(RELOAD_MARKER) }
     base_paths.uniq!
     
     return base_paths
   end
-  
-  RELOAD_MARKER = "--reload-temp--" unless defined?(RELOAD_MARKER)
   
   def find_libraries()
     libraries, features = Set[], find_features
@@ -154,12 +158,14 @@ class AutoReload
     # those checks evaluate to false.
     
     load_path = path
-    tmp_file = nil
+    tmp_dir = nil
     
     if @full_prog_name == path then
-      tmp_name = RELOAD_MARKER + File.basename(load_path)
-      tmp_file = Tempfile.open(tmp_name)
-      load_path = tmp_file.path
+      time = Time.now.to_i.to_s
+      tmp_dir = File.join(Dir.tmpdir, RELOAD_MARKER + "-dir-" + time)
+      Dir.mkdir(tmp_dir)
+
+      load_path = File.join(tmp_dir, RELOAD_MARKER + File.basename(load_path))
       
       begin
         # Try to hardlink first...
@@ -181,7 +187,7 @@ class AutoReload
     # that is getting the handler's callback
     Thread.new { refresh }
   ensure
-    tmp_file.unlink if tmp_file
+    FileUtils.rm_rf(tmp_dir) if tmp_dir
   end
 end
 

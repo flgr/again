@@ -3,7 +3,7 @@ require 'listen'
 
 class Listen::Adapter
   def self.usable_and_works?(directories, options = {})
-    usable? && Array(directories).all? { |d| !writable?(d) || works?(d, options) }
+    usable? #&& Array(directories).all? { |d| !writable?(d) || works?(d, options) }
   end
 
   def self.writable?(directory)
@@ -16,3 +16,10 @@ class Listen::Adapter
     FileUtils.rm(test_file) if File.exists?(test_file)
   end
 end
+
+# class Listen::DirectoryRecord
+#   # Don't use content-based modification at all (performance optimization)
+#   def content_modified?(path)
+#     return true
+#   end
+# end

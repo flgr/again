@@ -4,7 +4,7 @@ require "autoreload/version"
 
 Gem::Specification.new do |s|
   s.name        = "autoreload"  
-  s.version     = Autoreload::VERSION
+  s.version     = AutoReload::VERSION
 
   s.authors     = ["Florian Gross"]
   s.email       = ["Florian.S.Gross@web.de"]
