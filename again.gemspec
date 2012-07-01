@@ -1,16 +1,16 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require "autoreload/version"
+require "again/version"
 
 Gem::Specification.new do |s|
-  s.name        = "autoreload"  
-  s.version     = AutoReload::VERSION
+  s.name        = "again"  
+  s.version     = Again::VERSION
 
   s.authors     = ["Florian Gross"]
   s.email       = ["Florian.S.Gross@web.de"]
-  s.homepage    = "https://github.com/flgr/autoreload"
+  s.homepage    = "https://github.com/flgr/again"
   s.summary     = %q{The best way to iteratively develop with Ruby}
-  s.description = %q{autoreload automatically reloads your application's code when it changes'}
+  s.description = %q{again automatically reloads your application's code when it changes}
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")

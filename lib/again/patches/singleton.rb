@@ -1,7 +1,7 @@
 # Fix a bug in singleton: When the Singleton module is included multiple times
 # in the same class, it will reset the instance variable on each inclusion.
 #
-# Together with autoreload.rb this can easily result in lost state.
+# Together with again.rb this can easily result in lost state.
 # So this version only sets the instance variable to nil if it was undefined.
 
 require 'singleton'

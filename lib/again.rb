@@ -1,6 +1,6 @@
-require 'autoreload/version'
-require 'autoreload/extras'
-require 'autoreload/patches'
+require 'again/version'
+require 'again/extras'
+require 'again/patches'
 
 require 'set'
 require 'pathname'
@@ -11,7 +11,7 @@ require 'fileutils'
 require 'rubygems'
 require 'listen'
 
-class AutoReload
+class Again
   include Singleton 
 
   def self.start() self.instance end
@@ -191,8 +191,8 @@ class AutoReload
   end
 end
 
-AutoReload.start
+Again.start
 
-if AutoReload.reloaded? then
-  puts "AutoReload reloaded"
+if Again.reloaded? then
+  puts "Again reloaded"
 end

@@ -1,4 +1,4 @@
-class AutoReload
+class Again
   def self.open_cmd()
     (`which mate` rescue nil || "open").chomp
   end
