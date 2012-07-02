@@ -13,12 +13,12 @@ automatically loaded again.
 
 == SYNOPSIS
 
-=== Getting started again
+=== Getting started with again
 
 All you need to do to setup automatic reloading of your
 code is to require again:
 
-  require 'again' # ...and again and again
+  require 'again'               # ...and again and again
 
 You should do this after all other libraries of your application
 have already been loaded: Make it your last require.
@@ -75,32 +75,32 @@ Ruby/Gosu. My code typically looks like this:
   
   class GameWindow < Gosu::Window
     def initialize()
-	  @objects = ...
-	end
-	
-	def update()
-	  @objects.each(&:update)
-	rescue Exception => err
-	  handle_error(err)
-	end
-	
-	def draw()
-	  @objects.each(&:draw)
-	rescue Exception => err
-	  handle_error(err)
-	end
-	
-	def handle_error(err)
-	  STDERR.puts err, err.backtrace
-	  sleep 3
-	end
+      @objects = ...
+    end
+    
+    def update()
+      @objects.each(&:update)
+    rescue Exception => err
+      handle_error(err)
+    end
+
+    def draw()
+      @objects.each(&:draw)
+    rescue Exception => err
+      handle_error(err)
+    end
+    
+    def handle_error(err)
+      STDERR.puts err, err.backtrace
+      sleep 3
+    end
   end
   
   # Current file being executed from command line?
   if __FILE__ == $0 then
     # Let's play
     window = GameWindow.new
-	window.show
+    window.show
   end
 
 Rescuing exceptions in update() and draw() and
@@ -132,7 +132,6 @@ one special twist:
 
 We need to clear the Application routes first. Otherwise
 sinatra won't let us redefine our routes. That's all!
-	
 
 == LICENSE
 
