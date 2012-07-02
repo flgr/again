@@ -1,4 +1,4 @@
-# again.rb #
+# again.rb: Your code reacting to every change #
 
 ## DESCRIPTION ##
 
@@ -30,8 +30,9 @@ http://www.sinatrarb.com/) web development as well as
 
 ## INSTALL ##
 
+```sh
   gem install again
-
+```
 
 ## SYNOPSIS ##
 
