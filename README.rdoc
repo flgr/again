@@ -19,7 +19,7 @@ All you need to do to setup automatic reloading of your
 code is to require again:
 
 ```ruby
-  require 'again'               # ...and again and again
+require 'again'               # ...and again and again
 ```
 
 You should do this after all other libraries of your application
@@ -38,12 +38,12 @@ You should however wrap the actual start-up logic of your application
 like this:
 
 ```ruby
-  # Current file being executed from command line?
-  if __FILE__ == $0 then
-    # Show them windows
-    window = GameWindow.new
-    window.show
-  end
+# Current file being executed from command line?
+if __FILE__ == $0 then
+  # Show them windows
+  window = GameWindow.new
+  window.show
+end
 ```
 
 This is something that is good style anyway in order to allow your
@@ -58,9 +58,9 @@ main application file.
 You can have some logic that is only run on reloads like this:
 
 ```ruby
-  if Again.reloaded? then
-    puts "Hello again"
-  end
+if Again.reloaded? then
+  puts "Hello again"
+end
 ```
 
 This is useful when you want to reset your application into a
@@ -73,42 +73,42 @@ I'm using again for game development with Ruby, together with
 Ruby/Gosu. My code typically looks like this:
 
 ```ruby
-  require 'rubygems'
-  require 'gosu'
-  # ...
-  require 'again'
+require 'rubygems'
+require 'gosu'
+# ...
+require 'again'
   
-  include Gosu
+include Gosu
   
-  class GameWindow < Gosu::Window
-    def initialize()
-      @objects = ...
-    end
+class GameWindow < Gosu::Window
+  def initialize()
+    @objects = ...
+  end
     
-    def update()
-      @objects.each(&:update)
-    rescue Exception => err
-      handle_error(err)
-    end
+  def update()
+    @objects.each(&:update)
+  rescue Exception => err
+    handle_error(err)
+  end
 
-    def draw()
-      @objects.each(&:draw)
-    rescue Exception => err
-      handle_error(err)
-    end
+  def draw()
+    @objects.each(&:draw)
+  rescue Exception => err
+    handle_error(err)
+  end
     
-    def handle_error(err)
-      STDERR.puts err, err.backtrace
-      sleep 3
-    end
+  def handle_error(err)
+    STDERR.puts err, err.backtrace
+    sleep 3
   end
+end
   
-  # Current file being executed from command line?
-  if __FILE__ == $0 then
-    # Let's play
-    window = GameWindow.new
-    window.show
-  end
+# Current file being executed from command line?
+if __FILE__ == $0 then
+  # Let's play
+  window = GameWindow.new
+  window.show
+end
 ```
 
 Rescuing exceptions in update() and draw() and
@@ -124,20 +124,20 @@ This is very similar to the above Gosu example, but with
 one special twist:
 
 ```ruby
-  require 'rubygems'
-  require 'sinatra'
-  require 'json'
-  # ...
-  require 'again'
+require 'rubygems'
+require 'sinatra'
+require 'json'
+# ...
+require 'again'
   
-  if Again.reloaded? then
-    # Here's the twist
-    Sinatra::Application.routes.clear
-  end
+if Again.reloaded? then
+  # Here's the twist
+  Sinatra::Application.routes.clear
+end
   
-  get '/' do
-    return "Awesome!"
-  end
+get '/' do
+  return "Awesome!"
+end
 ```
 
 We need to clear the Application routes first. Otherwise
