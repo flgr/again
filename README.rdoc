@@ -4,9 +4,9 @@
 
 again is the best way to iteratively develop with Ruby.
 
-It monitors your application's code or code of any libraries
-it requires and automatically loads for changes and in the 
-event of a change, it loads the code again.
+It monitors your application's code or any required library
+for changes. In the likely event of a change, the code is
+automatically loaded again.
 
 == INSTALL
   gem install again
@@ -38,7 +38,7 @@ like this:
   # Current file being executed from command line?
   if __FILE__ == $0 then
     # Show them windows
-	window = GameWindow.new
+    window = GameWindow.new
     window.show
   end
 
