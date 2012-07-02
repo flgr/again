@@ -1,6 +1,6 @@
-= again.rb
+# again.rb
 
-== DESCRIPTION
+## DESCRIPTION
 
 again is the best way to iteratively develop with Ruby.
 
@@ -8,12 +8,12 @@ It monitors your application's code or any required library
 for changes. In the likely event of a change, the code is
 automatically loaded again.
 
-== INSTALL
+## INSTALL
   gem install again
 
-== SYNOPSIS
+## SYNOPSIS
 
-=== Getting started with again
+### Getting started with again
 
 All you need to do to setup automatic reloading of your
 code is to require again:
@@ -25,7 +25,7 @@ require 'again'               # ...and again and again
 You should do this after all other libraries of your application
 have already been loaded: Make it your last require.
 
-=== Controlling what to execute again
+### Controlling what to execute again
 
 When it detects a change to a file, again will reexecute all code
 in that file. This also applies to the main file of your application,
@@ -67,7 +67,7 @@ This is useful when you want to reset your application into a
 predictable state or when your frameworks need some special logic
 to make sure that your changes will be picked up.
 
-=== gosu again
+### gosu again
 
 I'm using again for game development with Ruby, together with
 Ruby/Gosu. My code typically looks like this:
@@ -117,7 +117,7 @@ If you have uncaught exceptions in there, Gosu will
 shutdown your application. This would kill our nice
 incremental development loop in the case of an error.
 
-=== sinatra again	
+### sinatra again	
 
 I also use again to incrementalize my sinatra development.
 This is very similar to the above Gosu example, but with
@@ -143,7 +143,7 @@ end
 We need to clear the Application routes first. Otherwise
 sinatra won't let us redefine our routes. That's all!
 
-== LICENSE
+## LICENSE
 
 (The MIT License)
 
