@@ -1,5 +1,9 @@
 # again.rb: Your code reacting to every change #
 
+<div style="float: right;">
+  <img src="https://github.com/flgr/again/raw/gh-pages/images/again.png" alt="" style="width: 50%; height: 50%;">
+</div>
+
 ## DESCRIPTION ##
 
 again is the best way to iteratively develop with Ruby.
