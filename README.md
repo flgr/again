@@ -1,8 +1,6 @@
-# again.rb: Your code reacting to every change #
+<img align="right" src="https://github.com/flgr/again/raw/gh-pages/images/again.png" alt="" width="100" height="100">
 
-<div style="float: right;">
-  <img src="https://github.com/flgr/again/raw/gh-pages/images/again.png" alt="" style="width: 50%; height: 50%;">
-</div>
+# again.rb: Your code reacting to every change #
 
 ## DESCRIPTION ##
 
