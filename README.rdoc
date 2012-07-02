@@ -18,7 +18,9 @@ automatically loaded again.
 All you need to do to setup automatic reloading of your
 code is to require again:
 
+```ruby
   require 'again'               # ...and again and again
+```
 
 You should do this after all other libraries of your application
 have already been loaded: Make it your last require.
@@ -35,12 +37,14 @@ work exactly as you expect.
 You should however wrap the actual start-up logic of your application
 like this:
 
+```ruby
   # Current file being executed from command line?
   if __FILE__ == $0 then
     # Show them windows
     window = GameWindow.new
     window.show
   end
+```
 
 This is something that is good style anyway in order to allow your
 code to be used as a library: The above would only be executed on
@@ -53,9 +57,11 @@ main application file.
 
 You can have some logic that is only run on reloads like this:
 
+```ruby
   if Again.reloaded? then
     puts "Hello again"
   end
+```
 
 This is useful when you want to reset your application into a
 predictable state or when your frameworks need some special logic
@@ -66,6 +72,7 @@ to make sure that your changes will be picked up.
 I'm using again for game development with Ruby, together with
 Ruby/Gosu. My code typically looks like this:
 
+```ruby
   require 'rubygems'
   require 'gosu'
   # ...
@@ -102,6 +109,7 @@ Ruby/Gosu. My code typically looks like this:
     window = GameWindow.new
     window.show
   end
+```
 
 Rescuing exceptions in update() and draw() and
 handling them in a central place is a very good idea.
@@ -115,6 +123,7 @@ I also use again to incrementalize my sinatra development.
 This is very similar to the above Gosu example, but with
 one special twist:
 
+```ruby
   require 'rubygems'
   require 'sinatra'
   require 'json'
@@ -129,6 +138,7 @@ one special twist:
   get '/' do
     return "Awesome!"
   end
+```
 
 We need to clear the Application routes first. Otherwise
 sinatra won't let us redefine our routes. That's all!
