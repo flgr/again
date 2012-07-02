@@ -1,0 +1,247 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Again by flgr</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Again</h1>
+        <p class="header">The best way to iteratively develop with Ruby</p>
+
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/flgr/again/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/flgr/again/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/flgr/again">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/flgr">flgr</a></p>
+
+
+      </header>
+      <section>
+        <h1>again.rb: Your code reacting to every change</h1>
+
+<h2>DESCRIPTION</h2>
+
+<p>again is the best way to iteratively develop with Ruby.</p>
+
+<p>It monitors your application's code or any required library
+for changes. In the likely event of a change, the code is
+automatically loaded again.</p>
+
+<h2>Why?</h2>
+
+<p>After seeing a <a href="http://www.youtube.com/watch?v=zdLDYUNRErQ&amp;feature=player_detailpage#t=532s">live stream</a>
+of Markus Persson <a href="http://news.ycombinator.com/item?id=2911696">hyper-incrementally developing a game for a 48h game development competition in Java</a>, where he debugged
+his 3d rendering code by just changing expressions, hitting save
+and instantly seeing the effect, I wanted to have support for
+hyper-iterative development in Ruby. </p>
+
+<p>Change a color, save, switch to your application and it's changed.</p>
+
+<p>again has been tested with Ruby 1.8, Ruby 1.9 and JRuby 1.6.2.
+I use it for my personal development, including <a href="http://www.sinatrarb.com/">Sinatra</a> web development as well as
+<a href="http://www.libgosu.org/">Ruby/Gosu</a> game development.</p>
+
+<p>(If anybody has a better link for the video of Markus Persson working incrementally,
+<a href="mailto:florian.s.gross@web.de">please drop me a mail</a>!)</p>
+
+<h2>INSTALL</h2>
+
+<div class="highlight">
+<pre>  gem install again
+</pre>
+</div>
+
+
+<h2>SYNOPSIS</h2>
+
+<h3>Getting started with again</h3>
+
+<p>All you need to do to setup automatic reloading of your
+code is to require again:</p>
+
+<div class="highlight">
+<pre>  <span class="nb">require</span> <span class="s1">'again'</span>       <span class="c1"># ...and again and again</span>
+</pre>
+</div>
+
+
+<p>You should do this after all other libraries of your application
+have already been loaded: Make it your last <code>require</code>.</p>
+
+<h3>Controlling what to execute again</h3>
+
+<h4>Not running start-up logic again</h4>
+
+<p>When again detects a change to a file, it will reexecute all code
+in that file. This also applies to the main file of your application,
+the one you actually run from the command line.</p>
+
+<p>For method and class definitions, this is no problem and things will
+work exactly as you expect.</p>
+
+<p>You should however wrap the actual start-up logic of your application
+like this:</p>
+
+<div class="highlight">
+<pre>  <span class="c1"># Current file being executed from command line?</span>
+  <span class="k">if</span> <span class="bp">__FILE__</span> <span class="o">==</span> <span class="vg">$PROGRAM_NAME</span> <span class="k">then</span>
+    <span class="c1"># Show them windows</span>
+    <span class="n">window</span> <span class="o">=</span> <span class="no">GameWindow</span><span class="o">.</span><span class="n">new</span>
+    <span class="n">window</span><span class="o">.</span><span class="n">show</span>
+  <span class="k">end</span>
+</pre>
+</div>
+
+
+<p>This is something that is good style anyway (in order to allow your
+code to be used as a library): The above would only be executed on
+direct execution from the command line; and not when the file is
+loaded as a library. <a href="http://blade.nagaokaut.ac.jp/cgi-bin/scat.rb/ruby/ruby-talk/184607">More detailed explanation of <code>__FILE__ == $PROGRAM_NAME</code></a></p>
+
+<p>again actually invests some extra effort to make sure that
+<code>__FILE__ == $PROGRAM_NAME</code> blocks will not be run again
+after reloading your main application file.</p>
+
+<h4>Running additional code on reloads</h4>
+
+<p>You can also have logic that is only run on reloads:</p>
+
+<div class="highlight">
+<pre>  <span class="k">if</span> <span class="no">Again</span><span class="o">.</span><span class="n">reloaded?</span> <span class="k">then</span>
+    <span class="nb">puts</span> <span class="s2">"Hello again"</span>
+  <span class="k">end</span>
+</pre>
+</div>
+
+
+<p>This is useful when you want to reset your application into a
+predictable state or when your frameworks need some special logic
+to make sure that your changes will be picked up. (Such as clearing
+routes in Sinatra, <a href="#sinatra-again">see below</a>.)</p>
+
+<h3>gosu again</h3>
+
+<p>I'm using again for game development with Ruby, together with
+<a href="http://www.libgosu.org/">Ruby/Gosu</a>. My code typically looks like this:</p>
+
+<div class="highlight">
+<pre>  <span class="nb">require</span> <span class="s1">'rubygems'</span>
+  <span class="nb">require</span> <span class="s1">'gosu'</span>
+  <span class="c1"># ...</span>
+  <span class="nb">require</span> <span class="s1">'again'</span>
+
+  <span class="kp">include</span> <span class="no">Gosu</span>
+
+  <span class="k">class</span> <span class="nc">GameWindow</span> <span class="o">&lt;</span> <span class="no">Gosu</span><span class="o">::</span><span class="no">Window</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">()</span>
+      <span class="vi">@objects</span> <span class="o">=</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">update</span><span class="p">()</span>
+      <span class="vi">@objects</span><span class="o">.</span><span class="n">each</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:update</span><span class="p">)</span>
+    <span class="k">rescue</span> <span class="no">Exception</span> <span class="o">=&gt;</span> <span class="n">err</span>
+      <span class="n">handle_error</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">()</span>
+      <span class="vi">@objects</span><span class="o">.</span><span class="n">each</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:draw</span><span class="p">)</span>
+    <span class="k">rescue</span> <span class="no">Exception</span> <span class="o">=&gt;</span> <span class="n">err</span>
+      <span class="n">handle_error</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">handle_error</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+      <span class="c1"># Simple logic, but it does the trick</span>
+      <span class="no">STDERR</span><span class="o">.</span><span class="n">puts</span> <span class="n">err</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">backtrace</span>
+      <span class="nb">sleep</span> <span class="mi">3</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="c1"># Current file being executed from command line?</span>
+  <span class="k">if</span> <span class="bp">__FILE__</span> <span class="o">==</span> <span class="vg">$PROGRAM_NAME</span> <span class="k">then</span>
+    <span class="c1"># Let's play</span>
+    <span class="n">window</span> <span class="o">=</span> <span class="no">GameWindow</span><span class="o">.</span><span class="n">new</span>
+    <span class="n">window</span><span class="o">.</span><span class="n">show</span>
+  <span class="k">end</span>
+</pre>
+</div>
+
+
+<p>Rescuing exceptions in <code>update()</code> and <code>draw()</code> and
+handling them in a central place is a very good idea.
+If you have uncaught exceptions in there, Gosu will
+shutdown your application. This would kill our nice
+incremental development loop in the case of an error.</p>
+
+<h3>sinatra again</h3>
+
+<p>I also use again to incrementalize my <a href="http://www.libgosu.org/">Sinatra</a> development.
+This is very similar to the above Gosu example, but with
+one special twist:</p>
+
+<div class="highlight">
+<pre>  <span class="nb">require</span> <span class="s1">'rubygems'</span>
+  <span class="nb">require</span> <span class="s1">'sinatra'</span>
+  <span class="nb">require</span> <span class="s1">'json'</span>
+  <span class="c1"># ...</span>
+  <span class="nb">require</span> <span class="s1">'again'</span>
+
+  <span class="k">if</span> <span class="no">Again</span><span class="o">.</span><span class="n">reloaded?</span> <span class="k">then</span>
+    <span class="c1"># Here's the twist</span>
+    <span class="no">Sinatra</span><span class="o">::</span><span class="no">Application</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">clear</span>
+  <span class="k">end</span>
+
+  <span class="n">get</span> <span class="s1">'/'</span> <span class="k">do</span>
+    <span class="k">return</span> <span class="s2">"Awesome!"</span>
+  <span class="k">end</span>
+</pre>
+</div>
+
+
+<p>We need to clear the Application routes first. Otherwise
+sinatra won't let us redefine our routes. That's all!</p>
+
+<h2>LICENSE</h2>
+
+<p>(The MIT License)</p>
+
+<p>Copyright (c) 2012, Florian Gross <a href="mailto:florian.s.gross@web.de">florian.s.gross@web.de</a></p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</p>
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+		
+  </body>
+</html>
