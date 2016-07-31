@@ -8,7 +8,7 @@ require 'singleton'
 
 class << Singleton
   alias :included_without_guard :included
-  
+
   def included(klass)
     return if klass.instance_variable_get(:@singleton_included)
     included_without_guard(klass)
